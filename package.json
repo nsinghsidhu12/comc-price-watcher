@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node --env-file=.env src/index.js",
+    "deploy": "node --env-file=.env src/deploy-commands.js",
     "lint": "eslint src/ --fix",
     "format": "prettier src/ --write"
   },
