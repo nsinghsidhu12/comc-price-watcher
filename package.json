@@ -1,0 +1,25 @@
+{
+  "name": "comc-price-checker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node --env-file=.env src/index.js",
+    "lint": "eslint src/ --fix",
+    "format": "prettier src/ --write"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@eslint/js": "^9.5.0",
+    "eslint": "^9.5.0",
+    "eslint-config-prettier": "^9.1.0",
+    "globals": "^15.6.0",
+    "prettier": "^3.3.2"
+  },
+  "dependencies": {
+    "discord.js": "^14.15.3"
+  }
+}
