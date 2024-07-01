@@ -5,6 +5,7 @@ const token = process.env.TOKEN;
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 client.commands = new Collection();
+client.cookies = '';
 
 await loadCommands(client.commands);
 await loadEvents(client);
