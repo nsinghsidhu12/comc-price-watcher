@@ -1,1 +1,1 @@
-# comc-price-checker
+# comc-price-watcher
