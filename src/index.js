@@ -1,5 +1,6 @@
 import { Client, Collection, GatewayIntentBits } from 'discord.js';
 import { loadCommands, loadEvents } from './utils/load.js';
+import WatchList from './models/watch-list.js';
 
 const token = process.env.TOKEN;
 
@@ -10,4 +11,6 @@ client.cookies = '';
 await loadCommands(client.commands);
 await loadEvents(client);
 
-client.login(token);
+await client.login(token);
+
+WatchList.sync();

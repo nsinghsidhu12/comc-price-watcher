@@ -49,7 +49,7 @@ export default {
         } catch (error) {
             console.error(error);
 
-            await interaction.editReply('Unable to log into COMC. Try again.')
+            await interaction.editReply('Unable to log into COMC. Try again.');
         }
     },
 };
