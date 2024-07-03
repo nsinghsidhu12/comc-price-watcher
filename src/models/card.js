@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../utils/database.js';
 
-const WatchList = sequelize.define('watch_list', {
+const Card = sequelize.define('card', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -17,9 +17,9 @@ const WatchList = sequelize.define('watch_list', {
     notify_flag: {
         type: DataTypes.BOOLEAN,
     },
-    last_notification: {
+    last_notified: {
         type: DataTypes.DATE,
     },
 });
 
-export default WatchList;
+export default Card;
