@@ -1,4 +1,6 @@
-export default async function getPrices(url, cookies) {
+export default async function getPrices(url, client) {
+    let prices = [];
+
     const response = await fetch(url, {
         headers: {
             Host: 'www.comc.com',
@@ -7,7 +9,7 @@ export default async function getPrices(url, cookies) {
             Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
             'Accept-Language': 'en-CA,en-US;q=0.7,en;q=0.3',
             'Accept-Encoding': 'gzip, deflate, br, zstd',
-            Cookie: cookies,
+            Cookie: client.cookies,
             Connection: 'keep-alive',
             'Upgrade-Insecure-Requests': '1',
             'Sec-Fetch-Dest': 'document',
@@ -19,8 +21,9 @@ export default async function getPrices(url, cookies) {
     });
 
     const body = await response.text();
-    const prices = body
-        .match(/\)'>\$\d\.\d\d/g)
+
+    prices = body
+        .match(/\)'>\$\d\.\d\d/gm)
         .map((price) => parseInt(parseFloat(price.substring(4)) * 100));
 
     return prices;
