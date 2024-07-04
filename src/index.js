@@ -16,12 +16,11 @@ await loadCommands(client.commands);
 await loadEvents(client);
 
 await client.login(token);
+await comcLogin(client);
 
 await Card.sync();
 
 setInterval(async () => {
-    await comcLogin(client);
-
     const cards = await Card.findAll({
         where: {
             notify_flag: true,
@@ -50,11 +49,12 @@ setInterval(async () => {
 
         while (prices[prices.length - 1] <= card.price) {
             allPrices = allPrices.concat(prices);
+
             prices = await getPrices(`${card.url},p${pageNum}`, client);
             pageNum += 1;
         }
 
-        prices = prices.filter(price => price <= card.price);
+        prices = prices.filter((price) => price <= card.price);
         allPrices = allPrices.concat(prices);
 
         const channel = client.channels.cache.get(channelId);
@@ -67,4 +67,4 @@ setInterval(async () => {
             last_notified: now,
         });
     }
-}, 20000);
+}, 30000);
