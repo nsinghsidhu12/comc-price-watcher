@@ -1,7 +1,10 @@
 import comcLogin from './comc-login.js';
 
-export default async function getPrices(url, client) {
-    let prices = [];
+export default async function getCardInfo(url, client) {
+    const cardInfo = {
+        prices: [],
+        img: '',
+    };
 
     do {
         const response = await fetch(url, {
@@ -28,11 +31,13 @@ export default async function getPrices(url, client) {
         if (body.search(/Hello,/m) === -1) {
             await comcLogin(client);
         } else {
-            prices = body
+            cardInfo.prices = body
                 .match(/\)'>\$\d\.\d\d/gm)
                 .map((price) => parseInt(parseFloat(price.substring(4)) * 100));
-        }
-    } while (prices.length === 0);
 
-    return prices;
+            cardInfo.img = body.match(/id="img1" src="([^&]+)/m)[1];
+        }
+    } while (cardInfo.prices.length === 0);
+
+    return cardInfo;
 }

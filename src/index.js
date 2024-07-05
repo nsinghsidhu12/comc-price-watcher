@@ -1,7 +1,7 @@
 import { Client, Collection, GatewayIntentBits } from 'discord.js';
 import { loadCommands, loadEvents } from './utils/load.js';
 import Card from './models/card.js';
-import getPrices from './utils/get-prices.js';
+import getCardInfo from './utils/get-card-info.js';
 import comcLogin from './utils/comc-login.js';
 
 const token = process.env.TOKEN;
@@ -43,19 +43,18 @@ setInterval(async () => {
 
         let allPrices = [];
         let pageNum = 2;
-        let prices = await getPrices(card.url, client);
+        let cardInfo = await getCardInfo(card.url, client);
 
-        if (prices[0] > card.price) return;
+        if (cardInfo.prices[0] > card.price) return;
 
-        while (prices[prices.length - 1] <= card.price) {
-            allPrices = allPrices.concat(prices);
-
-            prices = await getPrices(`${card.url},p${pageNum}`, client);
+        while (cardInfo.prices[cardInfo.prices.length - 1] <= card.price) {
+            allPrices = allPrices.concat(cardInfo.prices);
+            cardInfo = await getCardInfo(`${card.url},p${pageNum}`, client);
             pageNum += 1;
         }
 
-        prices = prices.filter((price) => price <= card.price);
-        allPrices = allPrices.concat(prices);
+        cardInfo.prices = cardInfo.prices.filter((price) => price <= card.price);
+        allPrices = allPrices.concat(cardInfo.prices);
 
         const channel = client.channels.cache.get(channelId);
 
@@ -63,7 +62,7 @@ setInterval(async () => {
             `Hey <@${userId}>! There are ${allPrices.length} cards equal to or less than the set amount of $${card.price / 100} for ${card.url}!`
         );
 
-        card.update({
+        await card.update({
             last_notified: now,
         });
     }
