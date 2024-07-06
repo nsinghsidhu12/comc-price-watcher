@@ -4,22 +4,12 @@ import Card from '../models/card.js';
 export default {
     data: new SlashCommandBuilder()
         .setName('watch')
-        .setDescription(
-            'Watches a card and notifies when its price equals or drops below a specified amount.'
-        )
+        .setDescription('Watches a card and notifies when its price equals or drops below a specified amount.')
         .addStringOption((option) =>
-            option
-                .setName('url')
-                .setDescription('The COMC card URL to watch.')
-                .setRequired(true)
+            option.setName('url').setDescription('The COMC card URL to watch.').setRequired(true)
         )
         .addNumberOption((option) =>
-            option
-                .setName('price')
-                .setDescription(
-                    'The maximum amount to receive notifications for.'
-                )
-                .setRequired(true)
+            option.setName('price').setDescription('The maximum amount to receive notifications for.').setRequired(true)
         ),
     async execute(interaction) {
         try {

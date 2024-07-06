@@ -26,15 +26,11 @@ export default async function comcLogin(client) {
             '__zlcmid',
         ]);
 
-        const cookies = (await page.context().cookies()).filter((cookie) =>
-            reqCookies.has(cookie.name)
-        );
+        const cookies = (await page.context().cookies()).filter((cookie) => reqCookies.has(cookie.name));
 
         await browser.close();
 
-        client.cookies = cookies
-            .map((cookie) => `${cookie.name}=${cookie.value}`)
-            .join('; ');
+        client.cookies = cookies.map((cookie) => `${cookie.name}=${cookie.value}`).join('; ');
     } catch (error) {
         console.error(error);
     }

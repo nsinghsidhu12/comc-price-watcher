@@ -1,9 +1,4 @@
-import {
-    Client,
-    Collection,
-    GatewayIntentBits,
-    EmbedBuilder,
-} from 'discord.js';
+import { Client, Collection, GatewayIntentBits, EmbedBuilder } from 'discord.js';
 import { loadCommands, loadEvents } from './utils/load.js';
 import Card from './models/card.js';
 import getCardInfo from './utils/get-card-info.js';
@@ -40,9 +35,7 @@ setInterval(async () => {
         const notifyTime = Date.parse(card.last_notified) + 3600000;
 
         if (now < notifyTime) {
-            console.log(
-                `Has not been 1 hour since the last notification for ${card.url}`
-            );
+            console.log(`Has not been 1 hour since the last notification for ${card.url}`);
 
             continue;
         }
@@ -59,9 +52,7 @@ setInterval(async () => {
             pageNum += 1;
         }
 
-        cardInfo.prices = cardInfo.prices.filter(
-            (price) => price <= card.price
-        );
+        cardInfo.prices = cardInfo.prices.filter((price) => price <= card.price);
 
         allPrices = allPrices.concat(cardInfo.prices);
 
@@ -79,9 +70,7 @@ setInterval(async () => {
                 iconURL: cardCategories.get(cardCategory).icon,
                 url: cardCategories.get(cardCategory).url,
             })
-            .setDescription(
-                `There are **${allPrices.length}** cards equal to or less than your set price!`
-            )
+            .setDescription(`There are **${allPrices.length}** cards equal to or less than your set price!`)
             .setThumbnail(`${cardInfo.img}&size=zoom&side=back`)
             .addFields(
                 {
