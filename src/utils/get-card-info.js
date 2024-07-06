@@ -4,6 +4,7 @@ export default async function getCardInfo(url, client) {
     const cardInfo = {
         prices: [],
         img: '',
+        name: '',
     };
 
     do {
@@ -36,6 +37,7 @@ export default async function getCardInfo(url, client) {
                 .map((price) => parseInt(parseFloat(price.substring(4)) * 100));
 
             cardInfo.img = body.match(/id="img1" src="([^&]+)/m)[1];
+            cardInfo.name = `${body.match(/<span class="set">([^<]+)<\/span>/m)[1].trim()} ${body.match(/<span class="description">([^<]+)<\/span>/m)[1].trim()}`;
         }
     } while (cardInfo.prices.length === 0);
 
