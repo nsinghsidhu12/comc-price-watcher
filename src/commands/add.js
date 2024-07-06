@@ -3,8 +3,10 @@ import Card from '../models/card.js';
 
 export default {
     data: new SlashCommandBuilder()
-        .setName('watch')
-        .setDescription('Watches a card and notifies when its price equals or drops below a specified amount.')
+        .setName('add')
+        .setDescription(
+            'Adds a card to the watch list and notifies when its price equals or drops below a specified amount.'
+        )
         .addStringOption((option) =>
             option.setName('url').setDescription('The COMC card URL to watch.').setRequired(true)
         )
@@ -25,7 +27,7 @@ export default {
                 last_notified: now - 3600000,
             });
 
-            await interaction.reply(`Watching ${url} at $${price} or lower!`);
+            await interaction.reply(`Added ${url} to the watch list and watching it at $${price} or lower!`);
         } catch (error) {
             if (error.name === 'SequelizeUniqueConstraintError') {
                 return await interaction.reply('That URL already exists.');
