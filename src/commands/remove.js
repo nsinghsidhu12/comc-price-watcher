@@ -12,11 +12,16 @@ export default {
         try {
             const url = interaction.options.getString('url');
 
-            await Card.destroy({
+            const rowsDeleted = await Card.destroy({
                 where: {
                     url: url,
                 },
             });
+
+            if (rowsDeleted === 0) {
+                await interaction.reply(`${url} does not exist in the watch list.`);
+                return;
+            }
 
             await interaction.reply(`Removed ${url} from the watch list and stopped watching it.`);
         } catch (error) {
