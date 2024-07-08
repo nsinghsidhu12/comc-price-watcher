@@ -13,29 +13,38 @@ export default {
             option.setName('notify').setDescription('The status to receive notifications or not.')
         ),
     async execute(interaction) {
-        const url = interaction.options.getString('url');
-        const price = interaction.options.getNumber('price');
-        const notify = interaction.options.getBoolean('notify');
+        try {
+            const url = interaction.options.getString('url');
+            const price = interaction.options.getNumber('price');
+            const notify = interaction.options.getBoolean('notify');
 
-        const card = await Card.findOne({ where: { url: url } });
-
-        if (!card) {
-            await interaction.reply(`${url} does not exist in the watch list.`);
-            return;
-        }
-
-        await Card.update(
-            {
-                price: price !== null ? price * 100 : card.price,
-                notify_flag: notify ?? card.notify_flag,
-            },
-            {
-                where: {
-                    url: url,
-                },
+            if (!price && !notify) {
+                await interaction.reply('There is nothing to update.');
+                return;
             }
-        );
 
-        await interaction.reply(`Successfully updated ${url}!`);
+            const card = await Card.findOne({ where: { url: url } });
+
+            if (!card) {
+                await interaction.reply('The URL does not exist in the watch list.');
+                return;
+            }
+
+            await Card.update(
+                {
+                    price: price !== null ? price * 100 : card.price,
+                    notify_flag: notify ?? card.notify_flag,
+                },
+                {
+                    where: {
+                        url: url,
+                    },
+                }
+            );
+
+            await interaction.reply('Successfully updated!');
+        } catch (error) {
+            console.error(error);
+        }
     },
 };

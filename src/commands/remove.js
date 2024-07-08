@@ -19,11 +19,11 @@ export default {
             });
 
             if (rowsDeleted === 0) {
-                await interaction.reply(`${url} does not exist in the watch list.`);
+                await interaction.reply('The URL does not exist in the watch list.');
                 return;
             }
 
-            await interaction.reply(`Removed ${url} from the watch list and stopped watching it.`);
+            await interaction.reply('Successfully removed from the watch list and stopped watching it.');
         } catch (error) {
             console.error(error);
         }
