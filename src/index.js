@@ -21,6 +21,10 @@ await loadEvents(client);
 await comcLogin(client);
 await client.login(token);
 
+const randomDelay = (min, max) => {
+    return new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * (max - min) + min) * 1000));
+};
+
 setInterval(async () => {
     const cards = await Card.findAll({
         where: {
@@ -41,12 +45,16 @@ setInterval(async () => {
 
         let allPrices = [];
         let pageNum = 2;
+
+        await randomDelay(1, 4);
+
         let prices = await getCardPrices(card.pageUrl, client);
 
         if (prices[0] > card.price) return;
 
         while (prices[prices.length - 1] <= card.price) {
             allPrices = allPrices.concat(prices);
+            await randomDelay(1, 4);
             prices = await getCardPrices(`${card.pageUrl},p${pageNum}`, client);
             pageNum += 1;
         }
@@ -68,7 +76,9 @@ setInterval(async () => {
                 iconURL: cardCategories.get(cardCategory).icon,
                 url: cardCategories.get(cardCategory).url,
             })
-            .setDescription(`There are **${allPrices.length}** cards equal to or less than your set price!`)
+            .setDescription(
+                `There ${allPrices.length === 1 ? 'is' : 'are'} **${allPrices.length}** card${allPrices.length === 1 ? '' : 's'} equal to or less than your set price!`
+            )
             .setThumbnail(`${card.imageUrl}&size=zoom&side=back`)
             .addFields(
                 {

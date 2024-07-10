@@ -6,6 +6,12 @@ export default {
     async execute(interaction) {
         try {
             const cards = await Card.findAll();
+
+            if (cards.length === 0) {
+                await interaction.reply('The watch list is empty.');
+                return;
+            }
+
             const pageLength = 3;
             const maxPages = Math.ceil(cards.length / pageLength);
             let cardIndex = 0;
@@ -39,12 +45,14 @@ export default {
 
             collector.on('collect', async (i) => {
                 if (i.customId === 'nextpage') {
-                    cardIndex = cardIndex + pageLength > fields.length ? 0 : cardIndex + pageLength;
+                    cardIndex = cardIndex + pageLength >= fields.length ? 0 : cardIndex + pageLength;
                 } else if (i.customId === 'prevpage') {
                     cardIndex =
                         cardIndex - pageLength < 0
                             ? Math.floor(fields.length / pageLength) * pageLength
                             : cardIndex - pageLength;
+
+                    cardIndex = cardIndex === fields.length ? cardIndex - pageLength : cardIndex;
                 }
                 listEmbed.setFields(fields.slice(cardIndex, cardIndex + pageLength));
                 listEmbed.setFooter({ text: `Page ${(cardIndex + pageLength) / pageLength}/${maxPages}` });
