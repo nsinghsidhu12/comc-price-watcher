@@ -17,7 +17,7 @@ cardCategories.set('Football', {
 
 cardCategories.set('Hockey', {
     url: 'https://www.comc.com/Cards/Hockey,sr,i100',
-    icon: 'https://img.freepik.com/premium-vector/black-crossed-hockey-sticks-puck-hockey-game-vector-icon-game-equipment-silhouette_820464-23.jpg',
+    icon: 'https://i.imgur.com/AfFp7pu.png',
 });
 
 cardCategories.set('Racing', {

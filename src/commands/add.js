@@ -1,4 +1,5 @@
 import { SlashCommandBuilder } from 'discord.js';
+import { getCardInfo } from '../utils/get-card.js';
 import Card from '../models/card.js';
 
 export default {
@@ -20,11 +21,15 @@ export default {
 
             const now = Date.now();
 
+            const cardInfo = await getCardInfo(url, interaction.client);
+
             await Card.create({
-                url: url,
+                pageUrl: url,
+                imageUrl: cardInfo.imageUrl,
+                name: cardInfo.name,
                 price: price * 100,
-                notify_flag: true,
-                last_notified: now - 3600000,
+                notifyFlag: true,
+                lastNotified: now - 3600000,
             });
 
             await interaction.reply('Successfully added to the watch list and watching it!');

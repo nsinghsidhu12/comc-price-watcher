@@ -23,7 +23,7 @@ export default {
                 return;
             }
 
-            const card = await Card.findOne({ where: { url: url } });
+            const card = await Card.findOne({ where: { pageUrl: url } });
 
             if (!card) {
                 await interaction.reply('The URL does not exist in the watch list.');
@@ -33,11 +33,11 @@ export default {
             await Card.update(
                 {
                     price: price !== null ? price * 100 : card.price,
-                    notify_flag: notify ?? card.notify_flag,
+                    notifyFlag: notify ?? card.notifyFlag,
                 },
                 {
                     where: {
-                        url: url,
+                        pageUrl: url,
                     },
                 }
             );

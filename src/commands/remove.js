@@ -14,7 +14,7 @@ export default {
 
             const rowsDeleted = await Card.destroy({
                 where: {
-                    url: url,
+                    pageUrl: url,
                 },
             });
 

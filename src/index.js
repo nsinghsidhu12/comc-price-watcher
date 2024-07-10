@@ -1,7 +1,7 @@
 import { Client, Collection, GatewayIntentBits, EmbedBuilder } from 'discord.js';
 import { loadCommands, loadEvents } from './utils/load.js';
 import Card from './models/card.js';
-import getCardInfo from './utils/get-card-info.js';
+import { getCardPrices } from './utils/get-card.js';
 import comcLogin from './utils/comc-login.js';
 import cardCategories from './utils/card-categories.js';
 
@@ -24,7 +24,7 @@ await comcLogin(client);
 setInterval(async () => {
     const cards = await Card.findAll({
         where: {
-            notify_flag: true,
+            notifyFlag: true,
         },
     });
 
@@ -32,46 +32,45 @@ setInterval(async () => {
 
     for (const card of cards) {
         const now = Date.now();
-        const notifyTime = Date.parse(card.last_notified) + 3600000;
+        const notifyTime = Date.parse(card.lastNotified) + 3600000;
 
         if (now < notifyTime) {
-            console.log(`Has not been 1 hour since the last notification for ${card.url}`);
-
+            console.log(`Has not been 1 hour since the last notification for ${card.pageUrl}`);
             continue;
         }
 
         let allPrices = [];
         let pageNum = 2;
-        let cardInfo = await getCardInfo(card.url, client);
+        let prices = await getCardPrices(card.pageUrl, client);
 
-        if (cardInfo.prices[0] > card.price) return;
+        if (prices[0] > card.price) return;
 
-        while (cardInfo.prices[cardInfo.prices.length - 1] <= card.price) {
-            allPrices = allPrices.concat(cardInfo.prices);
-            cardInfo = await getCardInfo(`${card.url},p${pageNum}`, client);
+        while (prices[prices.length - 1] <= card.price) {
+            allPrices = allPrices.concat(prices);
+            prices = await getCardPrices(`${card.pageUrl},p${pageNum}`, client);
             pageNum += 1;
         }
 
-        cardInfo.prices = cardInfo.prices.filter((price) => price <= card.price);
+        prices = prices.filter((price) => price <= card.price);
 
-        allPrices = allPrices.concat(cardInfo.prices);
+        allPrices = allPrices.concat(prices);
 
-        const cardUrlSplit = card.url.split('/');
+        const cardUrlSplit = card.pageUrl.split('/');
         const cardCategory = cardUrlSplit[4];
 
         const channel = client.channels.cache.get(channelId);
 
         const embed = new EmbedBuilder()
             .setColor(0x0099ff)
-            .setTitle(cardInfo.name)
-            .setURL(card.url)
+            .setTitle(card.name)
+            .setURL(card.pageUrl)
             .setAuthor({
                 name: cardCategory,
                 iconURL: cardCategories.get(cardCategory).icon,
                 url: cardCategories.get(cardCategory).url,
             })
             .setDescription(`There are **${allPrices.length}** cards equal to or less than your set price!`)
-            .setThumbnail(`${cardInfo.img}&size=zoom&side=back`)
+            .setThumbnail(`${card.imageUrl}&size=zoom&side=back`)
             .addFields(
                 {
                     name: 'Set Price',
@@ -89,12 +88,12 @@ setInterval(async () => {
                     inline: true,
                 }
             )
-            .setImage(`${cardInfo.img}&size=zoom`);
+            .setImage(`${card.imageUrl}&size=zoom`);
 
         channel.send({ content: `<@${userId}>`, embeds: [embed] });
 
         await card.update({
-            last_notified: now,
+            lastNotified: now,
         });
     }
 }, 30000);
