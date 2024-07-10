@@ -12,11 +12,11 @@ const Card = sequelize.define(
         pageUrl: {
             type: DataTypes.STRING,
             unique: true,
-            field: 'page_url'
+            field: 'page_url',
         },
         imageUrl: {
             type: DataTypes.STRING,
-            field: 'image_url'
+            field: 'image_url',
         },
         name: {
             type: DataTypes.STRING,

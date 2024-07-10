@@ -18,7 +18,7 @@ export default {
             const price = interaction.options.getNumber('price');
             const notify = interaction.options.getBoolean('notify');
 
-            if (!price && !notify) {
+            if (price === null && notify === null) {
                 await interaction.reply('There is nothing to update.');
                 return;
             }

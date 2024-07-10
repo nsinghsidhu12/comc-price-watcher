@@ -18,8 +18,8 @@ await Card.sync();
 await loadCommands(client.commands);
 await loadEvents(client);
 
-await client.login(token);
 await comcLogin(client);
+await client.login(token);
 
 setInterval(async () => {
     const cards = await Card.findAll({
@@ -55,8 +55,7 @@ setInterval(async () => {
 
         allPrices = allPrices.concat(prices);
 
-        const cardUrlSplit = card.pageUrl.split('/');
-        const cardCategory = cardUrlSplit[4];
+        const cardCategory = card.pageUrl.split('/')[4];
 
         const channel = client.channels.cache.get(channelId);
 
