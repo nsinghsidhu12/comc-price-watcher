@@ -23,7 +23,7 @@ export default {
                 return;
             }
 
-            await interaction.reply('Successfully removed from the watch list and stopped watching it.');
+            await interaction.reply('Successfully removed from the watch list.');
         } catch (error) {
             console.error(error);
         }

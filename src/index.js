@@ -38,10 +38,7 @@ setInterval(async () => {
         const now = Date.now();
         const notifyTime = Date.parse(card.lastNotified) + 3600000;
 
-        if (now < notifyTime) {
-            console.log(`Has not been 1 hour since the last notification for ${card.pageUrl}`);
-            continue;
-        }
+        if (now < notifyTime) continue;
 
         let allPrices = [];
         let pageNum = 2;
@@ -50,7 +47,7 @@ setInterval(async () => {
 
         let prices = await getCardPrices(card.pageUrl, client);
 
-        if (prices[0] > card.price) return;
+        if (prices[0] > card.price) continue;
 
         while (prices[prices.length - 1] <= card.price) {
             allPrices = allPrices.concat(prices);
@@ -73,8 +70,7 @@ setInterval(async () => {
             .setURL(card.pageUrl)
             .setAuthor({
                 name: cardCategory,
-                iconURL: cardCategories.get(cardCategory).icon,
-                url: cardCategories.get(cardCategory).url,
+                url: cardCategories[cardCategory],
             })
             .setDescription(
                 `There ${allPrices.length === 1 ? 'is' : 'are'} **${allPrices.length}** card${allPrices.length === 1 ? '' : 's'} equal to or less than your set price!`
@@ -99,7 +95,7 @@ setInterval(async () => {
             )
             .setImage(`${card.imageUrl}&size=zoom`);
 
-        channel.send({ content: `<@${userId}>`, embeds: [embed] });
+        await channel.send({ content: `<@${userId}>`, embeds: [embed] });
 
         await card.update({
             lastNotified: now,

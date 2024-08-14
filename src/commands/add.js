@@ -32,7 +32,7 @@ export default {
                 lastNotified: now - 3600000,
             });
 
-            await interaction.reply('Successfully added to the watch list and watching it!');
+            await interaction.reply('Successfully added to the watch list and started watching it!');
         } catch (error) {
             if (error.name === 'SequelizeUniqueConstraintError') {
                 return await interaction.reply('That URL already exists.');
